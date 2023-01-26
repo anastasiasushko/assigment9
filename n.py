@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
+
 def task1():
     frame = pd.read_csv("titles.csv")
     # print(frame.head())
@@ -22,7 +23,15 @@ def task1():
     plt.show()
 
 
-if __name__ == '__task1__':
-    task1()
+def task2():
+    frame = pd.read_csv("titles.csv")
+    age = frame[frame['type'] == 'SHOW']['age_certification'].dropna()
+
+    categories, age = np.unique(age, return_counts=True)
+    plt.figure(figsize=(10, 10))
+    plt.pie(age, labels=categories)
+    plt.show()
 
 
+task1()
+task2()
