@@ -8,7 +8,7 @@ def task1():
     # print(frame.head())
     show = frame[frame["type"] == "SHOW"]["tmdb_score"].dropna()
     movie = frame[frame["type"] == "MOVIE"]["tmdb_score"].dropna()
-    figure = plt.figure(figsize=(9, 4))
+    plt.figure(figsize=(9, 4))
 
     plt.subplot(1, 3, 1)
     plt.hist(show, np.arange(0, 10.2, 0.2))
@@ -33,5 +33,27 @@ def task2():
     plt.show()
 
 
+# def task3():
+#     frame = pd.read_csv("titles.csv")
+#     sort_year = frame[frame["release_year"] >= 2000]
+#     sort_score = frame[sort_year["imdb_score"] > 8.0]
+
+
+def task4():
+    frame = pd.read_csv("titles.csv") #file with films
+    frame1 = pd.read_csv("credits.csv") #file with actors
+
+    top_films = frame.sort_values(by="tmdb_score", ascending=False).head(1000)
+    actors = frame1[frame1['role'] == 'ACTOR'].dropna()
+#   join = top_films.join(actors, on='id', how='inner')
+    join = pd.merge(top_films, actors, how='inner', on='id')
+    top_actors = join.groupby(by='name')['title'].count().sort_values(ascending=False).head(10)
+
+    plt.figure(figsize=(9, 4))
+    plt.scatter(top_actors, top_films)
+    plt.show()
+# print(top_actors)
+
 task1()
 task2()
+task4()
