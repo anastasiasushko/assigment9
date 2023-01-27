@@ -35,8 +35,19 @@ def task2():
 
 # def task3():
 #     frame = pd.read_csv("titles.csv")
-#     sort_year = frame[frame["release_year"] >= 2000]
-#     sort_score = frame[sort_year["imdb_score"] > 8.0]
+#     sort_year = frame[frame["release_year"] >= 2000].dropna()
+#     sort_score = frame[sort_year["imdb_score"] > 8.0].dropna()
+#
+#     join = sort_score.groupby()
+#
+#     plt.plot()
+#     plt.figure(figsize=(9, 4))
+#     plt.xlabel('year')
+#     plt.ylabel('percent')
+#     plt.show()
+
+
+
 
 
 def task4():
@@ -49,11 +60,51 @@ def task4():
     join = pd.merge(top_films, actors, how='inner', on='id')
     top_actors = join.groupby(by='name')['title'].count().sort_values(ascending=False).head(10)
 
+    # plt.figure(figsize=(9, 4))
+    # plt.scatter(top_actors, top_films)
+    # plt.show()
+    print(top_actors)
+
+# def task5():
+#     frame = pd.read_csv("titles.csv") #file with films
+#     top_films = frame.sort_values(by="tmdb_score", ascending=False).head(1000)
+#     genres = []
+#     for film in top_films:
+#         films = film.replace("[", "").replace("'", "").replace("]", "").replace(",", "").split(" ")
+#         for genre in films:
+#             if genre == "":
+#                 continue
+#             else:
+#                 genres.append(genre)
+
+
+    # plt.figure(figsize=(9, 4))
+    # plt.bar(genres,)
+    # plt.show()
+def task5():
+    frame = pd.read_csv("titles.csv")
+    top_films = frame.sort_values(by="tmdb_score", ascending=False).head(1000)
+    top_films['genres'] = top_films['genres'].str.split(',')
+    top_films = top_films.explode('genres')
+
+    counter_for_ganres = top_films['genres'].str.strip('[]').value_counts()
+    counter_for_ganres.index = counter_for_ganres.index.str.strip("'")
+    counter_for_ganres.index = counter_for_ganres.index.str.strip(" '")
+    counter_for_ganres = counter_for_ganres.groupby(counter_for_ganres.index).sum()
+    counter_for_ganres = counter_for_ganres.drop_duplicates(keep='first')
+
+    counter_for_ganres.plot(kind = 'bar')
+    # print(counter_for_ganres)
+
     plt.figure(figsize=(9, 4))
-    plt.scatter(top_actors, top_films)
+    plt.ylabel("Genres")
+    plt.xlabel("Genres")
+    plt.title("Genres")
     plt.show()
-# print(top_actors)
+
 
 task1()
 task2()
 task4()
+task5()
+
